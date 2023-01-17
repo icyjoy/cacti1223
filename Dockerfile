@@ -22,8 +22,15 @@ mysql -uroot -e "CREATE DATABASE cactidb;"
 mysql -uroot -e "GRANT ALL ON cactidb.* TO ‘cacti_user’@’localhost’ IDENTIFIED BY ‘P@ssw0rd123’;"
 mysql -uroot -e "FLUSH PRIVILEGES;"
 
-COPY cacti /var/www/html/
+COPY cacti-latest.tar.gz /var/www/html/
+RUN cd /var/www/html/
+RUN chown root:root /var/www/html/cacti-latest.tar.gz
+RUN tar -xzf cacti-latest.tar.gz
+RUN chown -R root:root /var/www/html/cacti-1.2.23
+RUN mv /var/www/html/cacti-1.2.23 /var/www/html/
 RUN chown -R www-data:www-data /var/www/html/cacti
+RUN rm -rf cacti-latest.tar.gz
+
 mysql -uroot -p cactidb < /var/www/html/cacti/cacti.sql
 mysql -uroot -p mysql < /usr/share/mysql/mysql_test_data_timezone.sql
 mysql -uroot -e "GRANT SELECT on mysql.time_zone_name to cacti_user@localhost;"
