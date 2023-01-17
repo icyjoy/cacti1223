@@ -18,9 +18,9 @@ RUN chown -R root:root /etc/php/7.4/apache2/php.ini
 
 RUN apt install rrdtool snmp snmpd snmp-mibs-downloader libsnmp-dev
 
-mysql -uroot -e "CREATE DATABASE cactidb;"
-mysql -uroot -e "GRANT ALL ON cactidb.* TO ‘cacti_user’@’localhost’ IDENTIFIED BY ‘P@ssw0rd123’;"
-mysql -uroot -e "FLUSH PRIVILEGES;"
+RUN mysql -uroot -e "CREATE DATABASE cactidb;"
+RUN mysql -uroot -e "GRANT ALL ON cactidb.* TO ‘cacti_user’@’localhost’ IDENTIFIED BY ‘P@ssw0rd123’;"
+RUN mysql -uroot -e "FLUSH PRIVILEGES;"
 
 COPY cacti-latest.tar.gz /var/www/html/
 RUN cd /var/www/html/
@@ -31,10 +31,10 @@ RUN mv /var/www/html/cacti-1.2.23 /var/www/html/
 RUN chown -R www-data:www-data /var/www/html/cacti
 RUN rm -rf cacti-latest.tar.gz
 
-mysql -uroot -p cactidb < /var/www/html/cacti/cacti.sql
-mysql -uroot -p mysql < /usr/share/mysql/mysql_test_data_timezone.sql
-mysql -uroot -e "GRANT SELECT on mysql.time_zone_name to cacti_user@localhost;"
-mysql -uroot -e "FLUSH PRIVILEGES;"
+RUN mysql -uroot -p cactidb < /var/www/html/cacti/cacti.sql
+RUN mysql -uroot -p mysql < /usr/share/mysql/mysql_test_data_timezone.sql
+RUN mysql -uroot -e "GRANT SELECT on mysql.time_zone_name to cacti_user@localhost;"
+RUN mysql -uroot -e "FLUSH PRIVILEGES;"
 
 COPY config.php /var/www/html/cacti/include/
 RUN chown -R www-data:www-data /var/www/html/cacti
